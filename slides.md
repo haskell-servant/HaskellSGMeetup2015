@@ -39,9 +39,6 @@ name: Motivational
 layout: true
 .left-column[
 ### Motivational Example
-### Basic Combinators
-### Classes
-### Writing Combinators
 ]
 ---
 
@@ -93,23 +90,90 @@ bla
 
 ## rest
 
----
 
-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
+template: inverse
+
+## Classes
+---
+name: Motivational
+layout: true
+.left-column[
+### Motivational Example
+### Basic Combinators
+### Classes
+]
+---
+.right-column[
+## Classes
+]
+---
+.right-column[
 ## Classes
 
-- Responsible for the functionality of each combinator.
---
-~~~ {.haskell}
-data MyPath where
-    (:>) :: MyPath -> MyPath -> MyPath
-    (:<|>) :: MyPath -> MyPath -> MyPath
-    Get :: a -> MyPath
-    Post :: a -> MyPath
-~~~
+- Responsible for describing the functionality of each combinator.
+]
+---
+.right-column[
+## Classes
+
+- Responsible for describing the functionality of each combinator.
+- Currently:
+]
+
+---
+.right-column[
+## Classes
+
+- Responsible for describing the functionality of each combinator.
+- Currently:
+  * [HasServer](http://hackage.haskell.org/package/servant-server)
+]
+
+---
+.right-column[
+## Classes
+
+- Responsible for describing the functionality of each combinator.
+- Currently:
+  * [HasServer](http://hackage.haskell.org/package/servant-server)
+  * [HasClient](http://hackage.haskell.org/package/servant-client)
+]
+
+---
+.right-column[
+## Classes
+
+- Responsible for describing the functionality of each combinator.
+- Currently:
+  * [HasServer](http://hackage.haskell.org/package/servant-server)
+  * [HasClient](http://hackage.haskell.org/package/servant-client)
+  * [HasDocs](http://hackage.haskell.org/package/servant-docs)
+]
+---
+.right-column[
+## Classes
+
+- Responsible for describing the functionality of each combinator.
+- Currently:
+  * [HasServer](http://hackage.haskell.org/package/servant-server)
+  * [HasClient](http://hackage.haskell.org/package/servant-client)
+  * [HasDocs](http://hackage.haskell.org/package/servant-docs)
+  * [HasJQ](http://hackage.haskell.org/package/servant-jquery)
+]
 
 
-* Example: model an existing API
-* GHCJS
