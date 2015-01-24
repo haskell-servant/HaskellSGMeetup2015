@@ -1,0 +1,6 @@
+#!/bin/bash
+while true; do
+  change=$(inotifywait -e close_write,moved_to,create .)
+  change=${change#./ * }
+  if [[ "slides.md slides-template.html" =~ "$change" ]]; then ./render-slides.sh; fi
+done
