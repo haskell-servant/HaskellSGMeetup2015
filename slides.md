@@ -1,4 +1,8 @@
-# Servant
+name: inverse
+layout: true
+class: center, middle, inverse
+---
+# servant
 
 The minimalist webservice framework in Haskell
 
@@ -9,6 +13,7 @@ Wednesday, January 28, 2015
 Julian Arni & Sönke Hahn
 
 ---
+layout: false
 
 # Overview
 
@@ -29,7 +34,15 @@ Julian Arni & Sönke Hahn
 - Classes
   - todo, Julian!!!
 - Writing Combinators
-
+---
+name: Motivational
+layout: true
+.left-column[
+### Motivational Example
+### Basic Combinators
+### Classes
+### Writing Combinators
+]
 ---
 
 # Motivational Example
@@ -83,5 +96,20 @@ bla
 ---
 
 ------------------------------------------------------------------------------
+
+---
+## Classes
+
+- Responsible for the functionality of each combinator.
+--
+~~~ {.haskell}
+data MyPath where
+    (:>) :: MyPath -> MyPath -> MyPath
+    (:<|>) :: MyPath -> MyPath -> MyPath
+    Get :: a -> MyPath
+    Post :: a -> MyPath
+~~~
+
+
 * Example: model an existing API
 * GHCJS
