@@ -12,13 +12,14 @@ import Network.Wai
 import Network.Wai.Handler.Warp ( run )
 import Network.HTTP.Types
 
--- The combinator
-data WithAuthentication = WithAuthentication
 
 type DBLookup = ByteString -> IO Bool
 
 isGoodCookie :: DBLookup
 isGoodCookie = return . (== "myHardcodedCookie")
+
+-- The combinator
+data WithAuthentication
 
 -- The server instance
 --
