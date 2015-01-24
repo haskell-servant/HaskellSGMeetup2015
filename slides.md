@@ -14,13 +14,58 @@ Julian Arni & Sönke Hahn
 
 - Motivational Example
 - Basic Combinators
-  - Get, Post, etc.
+  - Get
+  - Sub
+  - Post, Put, Delete
   - Alternative
+  - QueryParam, QueryParams, QueryFlag
+  - Capture
+  - Header
+  - ReqBody
+  - Raw
+
+  - Matrix
+
 - Classes
   - todo, Julian!!!
 - Writing Combinators
 
 ---
+
+# Motivational Example
+
+--
+
+- Define a REST API as a type ( **just** the API)
+
+--
+
+- Generate client API calls
+
+--
+
+- Implement servers
+
+---
+
+Get
+
+~~~ {.haskell}
+import Servant
+
+data Person = Person { name :: String }
+
+alice :: Person
+alice = Person "alice"
+
+type Api = Get Person
+~~~
+--
+~~~ {.haskell}
+app :: Server Api
+app = return alice
+~~~
+
 
 - Encapsulates *just* the API
 - Separation of concerns
@@ -28,13 +73,6 @@ Julian Arni & Sönke Hahn
 
 ---
 
-## Code
-
-``` haskell
-
-main :: IO ()
-
-```
 
 --
 
