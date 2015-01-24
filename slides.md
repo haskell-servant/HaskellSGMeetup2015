@@ -14,18 +14,17 @@ Julian Arni & Sönke Hahn
 
 - Motivational Example
 - Basic Combinators
+  - Get, Post, etc.
+  - Alternative
 - Classes
+  - todo, Julian!!!
 - Writing Combinators
 
 ---
 
-# bla
-
-
 - Encapsulates *just* the API
 - Separation of concerns
 - Boilerplate
-
 
 ---
 
