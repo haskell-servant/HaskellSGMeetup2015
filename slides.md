@@ -35,7 +35,7 @@ layout: true
 
 --
 
-- Define a REST API as a type ( **just** the API)
+- Define a REST API as a type alias
 
 --
 
