@@ -1,16 +1,16 @@
-{-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeOperators #-}
 module AuthenticationCombinator where
 
-import Servant
-import Servant.Server.Internal ( succeedWith )
 import Data.ByteString
+import Network.HTTP.Types
 import Network.Wai
 import Network.Wai.Handler.Warp ( run )
-import Network.HTTP.Types
+import Servant
+import Servant.Server.Internal ( succeedWith )
 
 
 type DBLookup = ByteString -> IO Bool
