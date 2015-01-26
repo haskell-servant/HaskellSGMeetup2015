@@ -87,14 +87,76 @@ instance ToJSON result => HasServer (Get result) where
 ```
 
 ---
+
 # Subpaths
 
+``` haskell
+data (path :: k) :> a
+infixr 9 :>
+```
+
+``` haskell
+instance (KnownSymbol path, HasServer sublayout) =>
+  HasServer (path :> sublayout) where
+    type Server (path :> sublayout) = Server sublayout
+    route = ...
+```
+
+---
+
+# Alternatives
+
+``` haskell
+data a :<|> b = a :<|> b
+infixr 8 :<|>
+```
+
+``` haskell
+instance (HasServer a, HasServer b) => HasServer (a :<|> b) where
+  type Server (a :<|> b) = Server a :<|> Server b
+  route = ...
+```
+
+---
+
+# QueryParam
+
+``` haskell
+data (path :: k) :> a
+infixr 9 :>
+```
+
+``` haskell
+data QueryParam sym a
+```
+
+``` haskell
+instance (KnownSymbol sym, FromText a, HasServer sublayout)
+      => HasServer (QueryParam sym a :> sublayout) where
+  type Server (QueryParam sym a :> sublayout) =
+    Maybe a -> Server sublayout
+  route = ...
+```
 
 
 ---
-  - Alternative
-  - QueryParam
-  - HasServer (overview graph?)
+
+# Overview
+
+- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
+  `QueryParams`, &c.)
+- `Server` type family
+- Function to convert a `Server` into an `Application` (`serve`)
+
+--
+
+## Goals
+
+- little boilerplate
+- type safety
+- separation of concerns
+
+---
 
   - Post, Put, Delete
   - QueryParam, QueryParams, QueryFlag
