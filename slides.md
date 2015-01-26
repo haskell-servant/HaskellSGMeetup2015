@@ -64,21 +64,15 @@ data Get a
   deriving Typeable
 ```
 
---
-
 ``` haskell
 serve :: HasServer layout => Proxy layout -> Server layout -> Application
 ```
-
---
 
 ``` haskell
 class HasServer layout where
   type Server layout :: *
   route :: ...
 ```
-
---
 
 ``` haskell
 instance ToJSON result => HasServer (Get result) where
@@ -158,23 +152,186 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
 
 ---
 
-  - Post, Put, Delete
-  - QueryParam, QueryParams, QueryFlag
-  - Capture
-  - ReqBody
-  - Header
-  - Matrix
-  - Raw (aka wai FFI)
+# Post, Put, Delete
+
+``` haskell
+data Post a
+  deriving Typeable
+```
+
+``` haskell
+instance ToJSON a => HasServer (Post a) where
+  type Server (Post a) = EitherT (Int, String) IO a
+  route = ...
+```
+
+``` haskell
+data Put a
+  deriving Typeable
+```
+
+``` haskell
+instance ToJSON a => HasServer (Put a) where
+  type Server (Put a) = EitherT (Int, String) IO a
+  route = ...
+```
+
+``` haskell
+data Delete
+  deriving Typeable
+```
+
+``` haskell
+instance HasServer Delete where
+  type Server Delete = EitherT (Int, String) IO ()
+  route = ...
+```
+
+---
+
+# QueryParam
+
+``` haskell
+data QueryParam sym a
+```
+
+``` haskell
+instance (KnownSymbol sym, FromText a, HasServer sublayout)
+      => HasServer (QueryParam sym a :> sublayout) where
+  type Server (QueryParam sym a :> sublayout) =
+    Maybe a -> Server sublayout
+  route = ...
+```
+
+---
+
+# QueryParams
+
+``` haskell
+data QueryParams sym a
+```
+
+``` haskell
+instance (KnownSymbol sym, FromText a, HasServer sublayout)
+      => HasServer (QueryParams sym a :> sublayout) where
+  type Server (QueryParams sym a :> sublayout) =
+    [a] -> Server sublayout
+  route = ...
+```
+
+---
+
+# QueryFlag
+
+``` haskell
+data QueryFlag sym
+```
+
+``` haskell
+instance (KnownSymbol sym, HasServer sublayout)
+      => HasServer (QueryFlag sym :> sublayout) where
+  type Server (QueryFlag sym :> sublayout) =
+    Bool -> Server sublayout
+  route = ...
+```
+
+---
+
+# Capture
+
+``` haskell
+data Capture sym a
+```
+
+``` haskell
+instance (KnownSymbol capture, FromText a, HasServer sublayout)
+      => HasServer (Capture capture a :> sublayout) where
+  type Server (Capture capture a :> sublayout) =
+     a -> Server sublayout
+  route = ...
+```
+
+---
+
+# ReqBody
+
+``` haskell
+data ReqBody a
+```
+
+``` haskell
+instance (FromJSON a, HasServer sublayout)
+      => HasServer (ReqBody a :> sublayout) where
+  type Server (ReqBody a :> sublayout) =
+    a -> Server sublayout
+  route = ...
+```
+
+---
+
+# Other Combinators
+
+- Headers
+- Matrix Parameters
+
+---
+
+# Raw
+
+``` haskell
+data Raw
+```
+
+``` haskell
+instance HasServer Raw where
+  type Server Raw = Application
+  route = ...
+```
 
 ---
 
 # HasClient
 
+``` haskell
+client :: HasClient layout => Proxy layout -> Client layout
+```
+
+``` haskell
+class HasClient layout where
+  type Client layout :: *
+  clientWithRoute :: ...
+```
+
+``` haskell
+instance FromJSON result => HasClient (Get result) where
+  type Client (Get result) = BaseUrl -> EitherT String IO result
+  clientWithRoute = ...
+```
+
+``` haskell
+instance (KnownSymbol sym, ToText a, HasClient sublayout)
+      => HasClient (QueryParam sym a :> sublayout) where
+  type Client (QueryParam sym a :> sublayout) =
+    Maybe a -> Client sublayout
+  clientWithRoute = ...
+```
+
 ---
 
 # HasDocs
 
+``` haskell
+docs :: HasDocs layout => Proxy layout -> API
+```
 
+``` haskell
+markdown :: API -> String
+```
+
+``` haskell
+class HasDocs layout where
+  docsFor :: ...
+```
 
 
 
