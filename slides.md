@@ -19,17 +19,6 @@ layout: false
 
 - Motivational Example
 - Basic Combinators
-  - Get
-  - Sub
-  - Post, Put, Delete
-  - Alternative
-  - QueryParam, QueryParams, QueryFlag
-  - Capture
-  - Header
-  - ReqBody
-  - Raw
-
-  - Matrix
 
 - Classes
   - todo, Julian!!!
@@ -56,39 +45,75 @@ layout: true
 
 - Implement servers
 
----
-
-Get
-
-~~~ {.haskell}
-import Servant
-
-data Person = Person { name :: String }
-
-alice :: Person
-alice = Person "alice"
-
-type Api = Get Person
-~~~
 --
-~~~ {.haskell}
-app :: Server Api
-app = return alice
-~~~
 
-
-- Encapsulates *just* the API
-- Separation of concerns
-- Boilerplate
+- Change APIs in a type-safe manner
 
 ---
 
+.center[
+(compile & start server)
+]
+
+---
+
+# Get & HasServer
+
+``` haskell
+data Get a
+  deriving Typeable
+```
 
 --
 
-bla
+``` haskell
+serve :: HasServer layout => Proxy layout -> Server layout -> Application
+```
 
-## rest
+--
+
+``` haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: ...
+```
+
+--
+
+``` haskell
+instance ToJSON result => HasServer (Get result) where
+  type Server (Get result) = EitherT (Int, String) IO result
+  route = ...
+```
+
+---
+# Subpaths
+
+
+
+---
+  - Alternative
+  - QueryParam
+  - HasServer (overview graph?)
+
+  - Post, Put, Delete
+  - QueryParam, QueryParams, QueryFlag
+  - Capture
+  - ReqBody
+  - Header
+  - Matrix
+  - Raw (aka wai FFI)
+
+---
+
+# HasClient
+
+---
+
+# HasDocs
+
+
+
 
 
 
