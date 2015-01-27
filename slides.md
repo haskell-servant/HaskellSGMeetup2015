@@ -227,53 +227,6 @@ instance HasServer Raw where
   route = ...
 ```
 ]
----
-
-.right-column[
-# HasClient
-
-``` haskell
-client :: HasClient layout => Proxy layout -> Client layout
-```
-
-``` haskell
-class HasClient layout where
-  type Client layout :: *
-  clientWithRoute :: ...
-```
-
-``` haskell
-instance FromJSON result => HasClient (Get result) where
-  type Client (Get result) = BaseUrl -> EitherT String IO result
-  clientWithRoute = ...
-```
-
-``` haskell
-instance (KnownSymbol sym, ToText a, HasClient sublayout)
-      => HasClient (QueryParam sym a :> sublayout) where
-  type Client (QueryParam sym a :> sublayout) =
-    Maybe a -> Client sublayout
-  clientWithRoute = ...
-```
-]
----
-
-.right-column[
-# HasDocs
-
-``` haskell
-docs :: HasDocs layout => Proxy layout -> API
-```
-
-``` haskell
-markdown :: API -> String
-```
-
-``` haskell
-class HasDocs layout where
-  docsFor :: ...
-```
-]
 
 
 
@@ -425,7 +378,8 @@ instance ToJSON result => HasServer (Get result) where
                 responseLBS (mkStatus status (cs message))
                             []
                             (cs message)
-    | ...
+    | pathIsEmpty request && requestMethod request /= methodGet =
+        respond $ failWith WrongMethod
     | otherwise = respond $ failWith NotFound
 
 ```
@@ -464,7 +418,8 @@ instance ToJSON result => HasServer (Get result) where
                 responseLBS (mkStatus status (cs message))
                             []
                             (cs message)
-    | ...
+    | pathIsEmpty request && requestMethod request /= methodGet =
+        respond $ failWith WrongMethod
     | otherwise = respond $ failWith NotFound
 
 ```
@@ -502,7 +457,8 @@ instance ToJSON result => HasServer (Get result) where
                 responseLBS (mkStatus status (cs message))
                             []
                             (cs message)
-    | ...
+    | pathIsEmpty request && requestMethod request /= methodGet =
+        respond $ failWith WrongMethod
     | otherwise = respond $ failWith NotFound
 
 ```
@@ -540,7 +496,8 @@ instance ToJSON result => HasServer (Get result) where
 *               responseLBS (mkStatus status (cs message))
 *                           []
 *                           (cs message)
-    | ...
+    | pathIsEmpty request && requestMethod request /= methodGet =
+        respond $ failWith WrongMethod
     | otherwise = respond $ failWith NotFound
 
 ```
@@ -634,6 +591,45 @@ instance (HasServer a, HasServer b) => HasServer (a :<|> b) where
   * [HasClient](http://hackage.haskell.org/package/servant-client)
   * [HasDocs](http://hackage.haskell.org/package/servant-docs)
   * [HasJQ](http://hackage.haskell.org/package/servant-jquery)
+]
+---
+
+.right-column[
+# HasClient
+
+``` haskell
+client :: HasClient layout => Proxy layout -> Client layout
+```
+
+``` haskell
+class HasClient layout where
+  type Client layout :: *
+  clientWithRoute :: Proxy layout -> Req -> Client layout
+```
+
+``` haskell
+instance FromJSON result => HasClient (Get result) where
+  type Client (Get result) = BaseUrl -> EitherT String IO result
+ clientWithRoute Proxy req host = performRequestJSON H.methodGet req 200 host
+```
+]
+---
+
+.right-column[
+# HasDocs
+
+``` haskell
+docs :: HasDocs layout => Proxy layout -> API
+```
+
+``` haskell
+markdown :: API -> String
+```
+
+``` haskell
+class HasDocs layout where
+  docsFor :: ...
+```
 ]
 ---
 
