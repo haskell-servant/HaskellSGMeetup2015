@@ -14,20 +14,14 @@ import           GHC.Generics
 import           Servant
 
 
-type Api = ...
+type Api =
+       "r" :> "haskell.json" :> QueryParam "limit" Int :> Get (Listing RedditPost)
+  :<|> "u" :> (     "foo" :> Get String
+               :<|> "bar" :> Get String)
+  :<|> "a" :> QueryParam "q" String :> Get [String]
 
-api :: ...
-
-
-
-
-
-
-
-
-
-
-
+api :: Proxy Api
+api = Proxy
 
 
 data Listing a = Listing [a]
