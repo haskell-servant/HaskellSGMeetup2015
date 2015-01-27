@@ -21,7 +21,6 @@ layout: false
 - Basic Combinators
 
 - Classes
-  - todo, Julian!!!
 - Writing Combinators
 ---
 name: Motivational
@@ -30,33 +29,60 @@ layout: true
 ### Motivational Example
 ]
 ---
-
+.right-column[
+# Motivational Example
+]
+---
+.right-column[
 # Motivational Example
 
---
+- Define a REST API as a type alias
+]
+---
+.right-column[
+# Motivational Example
 
 - Define a REST API as a type alias
-
---
-
 - Generate client API calls
 
---
-
-- Implement servers
-
---
-
-- Change APIs in a type-safe manner
-
----
-
-.center[
-(compile & start server)
 ]
+---
+.right-column[
+# Motivational Example
 
+- Define a REST API as a type alias
+- Generate client API calls
+- Implement servers
+]
 ---
 
+.right-column[
+# Motivational Example
+
+- Define a REST API as a type alias
+- Generate client API calls
+- Implement servers
+- Change APIs in a type-safe manner
+]
+---
+
+name: inverse
+layout: true
+class: center, middle
+
+---
+(compile & start server)
+
+---
+name: Combinators
+layout: true
+.left-column[
+### Motivational Example
+### Basic Combinators
+]
+---
+
+.right-column[
 # Get & HasServer
 
 ``` haskell
@@ -79,9 +105,10 @@ instance ToJSON result => HasServer (Get result) where
   type Server (Get result) = EitherT (Int, String) IO result
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # Subpaths
 
 ``` haskell
@@ -95,9 +122,10 @@ instance (KnownSymbol path, HasServer sublayout) =>
     type Server (path :> sublayout) = Server sublayout
     route = ...
 ```
-
+]
 ---
 
+.right-column[
 # Alternatives
 
 ``` haskell
@@ -111,8 +139,10 @@ instance (HasServer a, HasServer b) => HasServer (a :<|> b) where
   route = ...
 ```
 
+]
 ---
 
+.right-column[
 # QueryParam
 
 ``` haskell
@@ -132,9 +162,10 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
   route = ...
 ```
 
-
+]
 ---
 
+.right-column[
 # Overview
 
 - Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
@@ -142,16 +173,27 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
 - `Server` type family
 - Function to convert a `Server` into an `Application` (`serve`)
 
---
+]
+
+---
+
+.right-column[
+# Overview
+
+- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
+  `QueryParams`, &c.)
+- `Server` type family
+- Function to convert a `Server` into an `Application` (`serve`)
 
 ## Goals
 
 - little boilerplate
 - type safety
 - separation of concerns
-
+]
 ---
 
+.right-column[
 # Post, Put, Delete
 
 ``` haskell
@@ -187,8 +229,10 @@ instance HasServer Delete where
   route = ...
 ```
 
+]
 ---
 
+.right-column[
 # QueryParam
 
 ``` haskell
@@ -202,9 +246,10 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
     Maybe a -> Server sublayout
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # QueryParams
 
 ``` haskell
@@ -218,9 +263,10 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
     [a] -> Server sublayout
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # QueryFlag
 
 ``` haskell
@@ -234,9 +280,10 @@ instance (KnownSymbol sym, HasServer sublayout)
     Bool -> Server sublayout
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # Capture
 
 ``` haskell
@@ -250,9 +297,10 @@ instance (KnownSymbol capture, FromText a, HasServer sublayout)
      a -> Server sublayout
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # ReqBody
 
 ``` haskell
@@ -266,16 +314,18 @@ instance (FromJSON a, HasServer sublayout)
     a -> Server sublayout
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # Other Combinators
 
 - Headers
 - Matrix Parameters
-
+]
 ---
 
+.right-column[
 # Raw
 
 ``` haskell
@@ -287,9 +337,10 @@ instance HasServer Raw where
   type Server Raw = Application
   route = ...
 ```
-
+]
 ---
 
+.right-column[
 # HasClient
 
 ``` haskell
@@ -315,9 +366,10 @@ instance (KnownSymbol sym, ToText a, HasClient sublayout)
     Maybe a -> Client sublayout
   clientWithRoute = ...
 ```
-
+]
 ---
 
+.right-column[
 # HasDocs
 
 ``` haskell
@@ -332,7 +384,7 @@ markdown :: API -> String
 class HasDocs layout where
   docsFor :: ...
 ```
-
+]
 
 
 
@@ -372,6 +424,95 @@ layout: true
 class HasServer layout where
   type Server layout :: *
   route :: Proxy layout -> Server layout -> RoutingApplication
+```
+]
+
+---
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+]
+---
+
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+
+toApplication :: RoutingApplication -> Application
+```
+]
+---
+
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+
+* toApplication :: RoutingApplication -> Application
+
+```
+]
+---
+
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+
+* toApplication :: RoutingApplication -> Application
+
+```
+* The only "central" code.
+]
+
+---
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
 
 type RoutingApplication =
      Request
@@ -395,6 +536,121 @@ instance ToJSON result => HasServer (Get result) where
                 responseLBS (mkStatus status (cs message))
                             []
                             (cs message)
+    | ...
+    | otherwise = respond $ failWith NotFound
+
+```
+
+]
+
+---
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+
+```haskell
+instance ToJSON result => HasServer (Get result) where
+  type Server (Get result) = EitherT (Int, String) IO result
+  route Proxy action request respond
+    | pathIsEmpty request &&
+      requestMethod request == methodGet = do
+*         e <- runEitherT action
+          respond . succeedWith $ case e of
+              Right output ->
+                responseLBS ok200
+                            [("Content-Type", "application/json")]
+                            (encode output)
+              Left (status, message) ->
+                responseLBS (mkStatus status (cs message))
+                            []
+                            (cs message)
+    | ...
+    | otherwise = respond $ failWith NotFound
+
+```
+
+]
+---
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+
+```haskell
+instance ToJSON result => HasServer (Get result) where
+  type Server (Get result) = EitherT (Int, String) IO result
+  route Proxy action request respond
+    | pathIsEmpty request &&
+      requestMethod request == methodGet = do
+*         e <- runEitherT action
+          respond . succeedWith $ case e of
+*             Right output ->
+*               responseLBS ok200
+*                           [("Content-Type", "application/json")]
+*                           (encode output)
+              Left (status, message) ->
+                responseLBS (mkStatus status (cs message))
+                            []
+                            (cs message)
+    | ...
+    | otherwise = respond $ failWith NotFound
+
+```
+
+]
+---
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+
+```haskell
+instance ToJSON result => HasServer (Get result) where
+  type Server (Get result) = EitherT (Int, String) IO result
+  route Proxy action request respond
+    | pathIsEmpty request &&
+      requestMethod request == methodGet = do
+*         e <- runEitherT action
+          respond . succeedWith $ case e of
+              Right output ->
+                responseLBS ok200
+                            [("Content-Type", "application/json")]
+                            (encode output)
+*             Left (status, message) ->
+*               responseLBS (mkStatus status (cs message))
+*                           []
+*                           (cs message)
     | ...
     | otherwise = respond $ failWith NotFound
 
@@ -527,3 +783,48 @@ layout: false
 |`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both | |
 |`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON | |
 | ... | | | | | |
+
+---
+
+## The expression problem
+
+
+|            | HasServer        | HasClient              | HasDocs  | ...
+|------------|------------------|------------------------|--------------|----|
+|`Get a`     | serve `a`        | get the `a`            | document `a` | |
+|`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both | |
+|`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON | |
+| ... | | | | | |
+
+* Types (that are instances of servant classes) are the constructors
+
+---
+
+## The expression problem
+
+
+|            | HasServer        | HasClient              | HasDocs  | ...
+|------------|------------------|------------------------|--------------|----|
+|`Get a`     | serve `a`        | get the `a`            | document `a` | |
+|`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both | |
+|`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON | |
+| ... | | | | | |
+
+* Types (that are instances of servant classes) are the constructors
+* Class methods are the function signature
+
+---
+
+## The expression problem
+
+
+|            | HasServer        | HasClient              | HasDocs  | ...
+|------------|------------------|------------------------|--------------|----|
+|`Get a`     | serve `a`        | get the `a`            | document `a` | |
+|`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both | |
+|`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON | |
+| ... | | | | | |
+
+* Types (that are instances of servant classes) are the constructors
+* Class methods are the function signature
+* Instance methods are the each line of the pattern match
