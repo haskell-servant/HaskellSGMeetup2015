@@ -66,14 +66,6 @@ layout: true
 ]
 ---
 
-name: inverse
-layout: true
-class: center, middle
-
----
-(compile & start server)
-
----
 name: Combinators
 layout: true
 .left-column[
@@ -91,7 +83,8 @@ data Get a
 ```
 
 ``` haskell
-serve :: HasServer layout => Proxy layout -> Server layout -> Application
+serve :: HasServer layout =>
+  Proxy layout -> Server layout -> Application
 ```
 
 ``` haskell
@@ -166,124 +159,6 @@ instance (KnownSymbol sym, FromText a, HasServer sublayout)
 ---
 
 .right-column[
-# Overview
-
-- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
-  `QueryParams`, &c.)
-- `Server` type family
-- Function to convert a `Server` into an `Application` (`serve`)
-
-]
-
----
-
-.right-column[
-# Overview
-
-- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
-  `QueryParams`, &c.)
-- `Server` type family
-- Function to convert a `Server` into an `Application` (`serve`)
-
-## Goals
-
-- little boilerplate
-- type safety
-- separation of concerns
-]
----
-
-.right-column[
-# Post, Put, Delete
-
-``` haskell
-data Post a
-  deriving Typeable
-```
-
-``` haskell
-instance ToJSON a => HasServer (Post a) where
-  type Server (Post a) = EitherT (Int, String) IO a
-  route = ...
-```
-
-``` haskell
-data Put a
-  deriving Typeable
-```
-
-``` haskell
-instance ToJSON a => HasServer (Put a) where
-  type Server (Put a) = EitherT (Int, String) IO a
-  route = ...
-```
-
-``` haskell
-data Delete
-  deriving Typeable
-```
-
-``` haskell
-instance HasServer Delete where
-  type Server Delete = EitherT (Int, String) IO ()
-  route = ...
-```
-
-]
----
-
-.right-column[
-# QueryParam
-
-``` haskell
-data QueryParam sym a
-```
-
-``` haskell
-instance (KnownSymbol sym, FromText a, HasServer sublayout)
-      => HasServer (QueryParam sym a :> sublayout) where
-  type Server (QueryParam sym a :> sublayout) =
-    Maybe a -> Server sublayout
-  route = ...
-```
-]
----
-
-.right-column[
-# QueryParams
-
-``` haskell
-data QueryParams sym a
-```
-
-``` haskell
-instance (KnownSymbol sym, FromText a, HasServer sublayout)
-      => HasServer (QueryParams sym a :> sublayout) where
-  type Server (QueryParams sym a :> sublayout) =
-    [a] -> Server sublayout
-  route = ...
-```
-]
----
-
-.right-column[
-# QueryFlag
-
-``` haskell
-data QueryFlag sym
-```
-
-``` haskell
-instance (KnownSymbol sym, HasServer sublayout)
-      => HasServer (QueryFlag sym :> sublayout) where
-  type Server (QueryFlag sym :> sublayout) =
-    Bool -> Server sublayout
-  route = ...
-```
-]
----
-
-.right-column[
 # Capture
 
 ``` haskell
@@ -301,25 +176,39 @@ instance (KnownSymbol capture, FromText a, HasServer sublayout)
 ---
 
 .right-column[
-# ReqBody
+# Digest
 
-``` haskell
-data ReqBody a
-```
+- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
+  `QueryParam`, &c.)
+- `Server` type family
+- Function to convert a `Server` into an `Application` (`serve`)
 
-``` haskell
-instance (FromJSON a, HasServer sublayout)
-      => HasServer (ReqBody a :> sublayout) where
-  type Server (ReqBody a :> sublayout) =
-    a -> Server sublayout
-  route = ...
-```
+]
+
+---
+
+.right-column[
+# Digest
+
+- Combinators to specify an api as a type alias (`Get`, `:>`, `:<|>`,
+  `QueryParam`, &c.)
+- `Server` type family
+- Function to convert a `Server` into an `Application` (`serve`)
+
+## Goals
+
+- little boilerplate
+- type safety
+- separation of API and application logic
 ]
 ---
 
 .right-column[
 # Other Combinators
 
+- Post, Put, Delete
+- QueryParams, QueryFlag
+- ReqBody
 - Headers
 - Matrix Parameters
 ]
