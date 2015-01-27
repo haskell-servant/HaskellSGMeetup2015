@@ -361,6 +361,77 @@ layout: true
 ### Basic Combinators
 ### Classes
 ]
+
+---
+
+.right-column[
+
+## Get
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+
+```haskell
+instance ToJSON result => HasServer (Get result) where
+  type Server (Get result) = EitherT (Int, String) IO result
+  route Proxy action request respond
+    | pathIsEmpty request &&
+      requestMethod request == methodGet = do
+          e <- runEitherT action
+          respond . succeedWith $ case e of
+              Right output ->
+                responseLBS ok200
+                            [("Content-Type", "application/json")]
+                            (encode output)
+              Left (status, message) ->
+                responseLBS (mkStatus status (cs message))
+                            []
+                            (cs message)
+    | ...
+    | otherwise = respond $ failWith NotFound
+
+```
+
+]
+
+---
+
+.right-column[
+## Alternative
+
+```haskell
+class HasServer layout where
+  type Server layout :: *
+  route :: Proxy layout -> Server layout -> RoutingApplication
+
+type RoutingApplication =
+     Request
+  -> (RouteResult Response -> IO ResponseReceived)
+  -> IO ResponseReceived
+```
+
+```haskell
+instance (HasServer a, HasServer b) => HasServer (a :<|> b) where
+    type Server (a :<|> b) = Server a :<|> Server b
+    route Proxy (a :<|> b) request respond =
+        route pa a request $ \ mResponse ->
+          if isMismatch mResponse
+             then route pb b request $
+                \mResponse' -> respond (mResponse <> mResponse')
+             else respond mResponse
+    where pa = Proxy :: Proxy a
+          pb = Proxy :: Proxy b
+```
+]
+
 ---
 .right-column[
 ## Classes
@@ -420,4 +491,39 @@ layout: true
   * [HasJQ](http://hackage.haskell.org/package/servant-jquery)
 ]
 
+---
+layout: false
 
+## The expression problem
+
+> The goal is to define a datatype by cases, where one can add new cases to the
+> datatype and new functions over the datatype, without recompiling existing
+> code, and while retaining static type safety (e.g., no casts).
+>  __Philip Wadler, *The Expression Problem*, 1998__
+
+--
+
+* This is one of the things the combinator/classes design solves.
+
+
+---
+## The expression problem
+
+--
+
+|            | HasServer        | HasClient              | HasDocs             |
+|------------|------------------|------------------------|---------------------|
+|`Get a`     | serve `a`        | get the `a`            | document `a`        |
+|`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both  |
+|`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON |
+
+---
+## The expression problem
+
+
+|            | HasServer        | HasClient              | HasDocs  | ...
+|------------|------------------|------------------------|--------------|----|
+|`Get a`     | serve `a`        | get the `a`            | document `a` | |
+|`a :<∣> b`  | serve `a` and `b`| get either `a` or `b`  | document them both | |
+|`ReqBody a` | pass `a` as arg  | send `a`  via req body | document `a`'s JSON | |
+| ... | | | | | |
