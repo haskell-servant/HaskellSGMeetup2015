@@ -13,10 +13,3 @@ app :: Application
 app = undefined
 
 
--- * business logic
-
-data Person = Person { name :: String }
-
-alice :: Person
-alice = Person "alice"
-bob = Person "bob"
