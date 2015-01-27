@@ -36,33 +36,35 @@ layout: true
 .right-column[
 # Motivational Example
 
-- Define a REST API as a type alias
+- REST APIs are modelled through type aliases.
 ]
 ---
 .right-column[
 # Motivational Example
 
-- Define a REST API as a type alias
-- Generate client API calls
-
+- REST APIs are modelled through type aliases.
+- `servant` allows to
+  - create client API calls,
 ]
 ---
 .right-column[
 # Motivational Example
 
-- Define a REST API as a type alias
-- Generate client API calls
-- Implement servers
+- REST APIs are modelled through type aliases.
+- `servant` allows to
+  - create client API calls,
+  - implement servers,
 ]
 ---
 
 .right-column[
 # Motivational Example
 
-- Define a REST API as a type alias
-- Generate client API calls
-- Implement servers
-- Change APIs in a type-safe manner
+- REST APIs are modelled through type aliases.
+- `servant` allows to
+  - create client API calls,
+  - implement servers,
+  - change APIs in a type-safe way.
 ]
 ---
 
