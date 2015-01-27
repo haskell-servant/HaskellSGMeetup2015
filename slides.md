@@ -635,6 +635,15 @@ instance (HasServer a, HasServer b) => HasServer (a :<|> b) where
   * [HasDocs](http://hackage.haskell.org/package/servant-docs)
   * [HasJQ](http://hackage.haskell.org/package/servant-jquery)
 ]
+---
+
+name: inverse
+layout: true
+class: center, middle
+
+---
+(Writing your own combinator)
+
 
 ---
 layout: false
