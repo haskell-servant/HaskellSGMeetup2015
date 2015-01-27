@@ -12,9 +12,9 @@ import           Api
 main :: IO ()
 main = do
   let url = BaseUrl Http "localhost" 8000
-  result <- runEitherT (getPostings (SubReddit "lisp") (Just 3) url)
+  result <- runEitherT (getPostings (Just 3) url)
   case result of
     Right (Listing postings) -> forM_ postings print
 
-getPostings :: SubReddit -> Maybe Int -> BaseUrl -> EitherT String IO (Listing RedditPost)
+getPostings :: Maybe Int -> BaseUrl -> EitherT String IO (Listing RedditPost)
 getPostings = client api

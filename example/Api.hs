@@ -15,21 +15,14 @@ import           Servant
 
 
 type Api =
-  "r" :> Capture "subreddit" SubReddit :> QueryParam "limit" Int :> Get (Listing RedditPost)
+       "r" :> "haskell.json" :> QueryParam "limit" Int :> Get (Listing RedditPost)
+  :<|> "u" :> (     "foo" :> Get String
+               :<|> "bar" :> Get String)
+  :<|> "a" :> QueryParam "q" String :> Get [String]
 
 api :: Proxy Api
 api = Proxy
 
-
-data SubReddit = SubReddit String
-
-instance ToText SubReddit where
-  toText (SubReddit s) = cs (s ++ ".json")
-
-instance FromText SubReddit where
-  fromText (cs -> s) = if ".json" `isSuffixOf` s
-    then Just $ SubReddit $ reverse $ drop 5 $ reverse s
-    else Nothing
 
 data Listing a = Listing [a]
   deriving (Show)
